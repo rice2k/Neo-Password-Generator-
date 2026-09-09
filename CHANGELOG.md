@@ -1,28 +1,37 @@
 # Changelog
 
+## v2.0.0 - 2026-09-09
+
+Major Neo Password Generator upgrade.
+
+### Added
+
+- New passphrase generator mode.
+- 3–8 word passphrases from a built-in local word list.
+- Configurable passphrase separator.
+- Optional word capitalization.
+- Optional cryptographically random two-digit suffix.
+- Optional symbol suffix.
+- Passphrase presets: Standard, Strong, and Compact.
+- Batch generation expanded to 20 results.
+- Visible v2.0 version badge and Version 2 details section.
+- Updated strength messaging for both passwords and passphrases.
+- New repository screenshot and README preview section.
+
+### Improved
+
+- Refined responsive layout and Neo visual treatment.
+- Clearer privacy and security explanations.
+- Result list can scroll when generating large batches.
+- Existing password generator continues to use `crypto.getRandomValues()` with rejection sampling.
+
 ## v1.0.0 - 2026-09-09
 
 Initial Neo Password Generator release.
 
-### Added
-
-- Complete redesign as Neo Password Generator.
-- Browser-only password generation.
-- Cryptographic randomness with `crypto.getRandomValues()`.
-- Rejection sampling to avoid modulo bias.
-- Character-set guarantees for enabled groups.
-- Length control from 4 to 128 characters.
-- Balanced, Strong, Maximum, Easy to type, and PIN presets.
-- Lowercase, uppercase, number, and symbol toggles.
-- Ambiguous-character exclusion.
-- Custom excluded characters.
-- No-repeat mode.
-- Start-with-letter mode.
-- Batch generation for 1, 3, 5, or 10 passwords.
-- Estimated entropy and strength display.
-- Individual copy and Copy All actions.
-- Keyboard shortcuts.
-- Responsive mobile layout.
-- Dark/light theme support.
-- Privacy and security documentation.
-- GitHub Pages deployment workflow.
+- Secure browser-only password generation.
+- Password lengths from 4 to 128 characters.
+- Character-group controls and presets.
+- Ambiguous-character and custom exclusions.
+- No-repeat and start-with-letter modes.
+- Entropy/strength estimate, copy controls, themes, and GitHub Pages workflow.

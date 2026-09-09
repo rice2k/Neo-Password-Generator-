@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Neo Password Generator by Rice2k — a private, client-side password generator using the Web Crypto API.">
-  <meta name="theme-color" content="#090b12">
-  <title>Neo Password Generator | Rice2k</title>
+  <meta name="description" content="Neo Password Generator v2 by Rice2k — secure local password and passphrase generation using the Web Crypto API.">
+  <meta name="theme-color" content="#070912">
+  <title>Neo Password Generator v2 | Rice2k</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -16,11 +16,11 @@
       <div class="brand-mark" aria-hidden="true">NEO</div>
       <div>
         <p class="eyebrow">Rice2k Security Tools</p>
-        <h1>Neo Password Generator</h1>
+        <div class="title-row"><h1>Neo Password Generator</h1><span class="version-badge">v2.0</span></div>
       </div>
     </div>
     <div class="header-actions">
-      <span class="privacy-pill" title="Passwords are generated only in your browser">Local only</span>
+      <span class="privacy-pill">Local only</span>
       <button id="themeToggle" class="icon-button" type="button" aria-label="Toggle color theme">◐</button>
     </div>
   </header>
@@ -28,14 +28,20 @@
   <main>
     <section class="hero">
       <div>
-        <p class="eyebrow">Private • Fast • No account required</p>
-        <h2>Create strong passwords without sending them anywhere.</h2>
-        <p class="hero-copy">Everything runs in this page using your browser's cryptographic random-number generator. Generated passwords are not uploaded, logged, or saved by this tool.</p>
+        <p class="eyebrow">Private • Secure • No account required</p>
+        <h2>Generate strong passwords and memorable passphrases.</h2>
+        <p class="hero-copy">Neo v2 runs entirely in your browser. Randomness comes from <code>crypto.getRandomValues()</code>; generated secrets are never uploaded, logged, or saved by this app.</p>
       </div>
-      <div class="hero-badge" aria-label="Client-side security information">
+      <div class="hero-badge">
         <strong>Web Crypto</strong>
-        <span>Secure random generation</span>
+        <span>Cryptographic randomness</span>
+        <small>No server • No analytics</small>
       </div>
+    </section>
+
+    <section class="mode-switch" aria-label="Generator mode">
+      <button class="mode-button active" type="button" data-mode="password">Random password</button>
+      <button class="mode-button" type="button" data-mode="passphrase">Passphrase</button>
     </section>
 
     <section id="generator" class="generator-grid" aria-labelledby="generatorTitle">
@@ -48,60 +54,74 @@
           <button id="resetButton" class="text-button" type="button">Reset</button>
         </div>
 
-        <div class="preset-row" aria-label="Password presets">
-          <button class="preset active" type="button" data-preset="balanced">Balanced</button>
-          <button class="preset" type="button" data-preset="strong">Strong</button>
-          <button class="preset" type="button" data-preset="maximum">Maximum</button>
-          <button class="preset" type="button" data-preset="easy">Easy to type</button>
-          <button class="preset" type="button" data-preset="pin">PIN</button>
+        <div id="passwordControls">
+          <div class="preset-row" aria-label="Password presets">
+            <button class="preset active" type="button" data-preset="balanced">Balanced</button>
+            <button class="preset" type="button" data-preset="strong">Strong</button>
+            <button class="preset" type="button" data-preset="maximum">Maximum</button>
+            <button class="preset" type="button" data-preset="easy">Easy to type</button>
+            <button class="preset" type="button" data-preset="pin">PIN</button>
+          </div>
+
+          <div class="field-group length-group">
+            <div class="field-label-row">
+              <label for="lengthRange">Password length</label>
+              <div class="number-box"><input id="lengthNumber" type="number" min="4" max="128" value="20" inputmode="numeric"><span>chars</span></div>
+            </div>
+            <input id="lengthRange" type="range" min="4" max="128" value="20">
+            <div class="range-scale"><span>4</span><span>64</span><span>128</span></div>
+          </div>
+
+          <fieldset class="field-group">
+            <legend>Character sets</legend>
+            <div class="option-grid">
+              <label class="check-card"><input id="lowercase" type="checkbox" checked><span><strong>Lowercase</strong><small>a-z</small></span></label>
+              <label class="check-card"><input id="uppercase" type="checkbox" checked><span><strong>Uppercase</strong><small>A-Z</small></span></label>
+              <label class="check-card"><input id="numbers" type="checkbox" checked><span><strong>Numbers</strong><small>0-9</small></span></label>
+              <label class="check-card"><input id="symbols" type="checkbox" checked><span><strong>Symbols</strong><small>! @ # $ % …</small></span></label>
+            </div>
+          </fieldset>
+
+          <details class="advanced" open>
+            <summary>Advanced password options</summary>
+            <div class="advanced-body">
+              <label class="toggle-row"><span><strong>Exclude ambiguous characters</strong><small>Removes 0, O, o, 1, I, l and |.</small></span><input id="excludeAmbiguous" type="checkbox" checked></label>
+              <label class="toggle-row"><span><strong>No repeated characters</strong><small>Each character can appear only once.</small></span><input id="noRepeats" type="checkbox"></label>
+              <label class="toggle-row"><span><strong>Start with a letter</strong><small>Helpful for strict legacy password rules.</small></span><input id="startWithLetter" type="checkbox"></label>
+              <label class="stacked-label" for="excludedChars">Custom characters to exclude<input id="excludedChars" type="text" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Example: {}[]/\\"></label>
+            </div>
+          </details>
         </div>
 
-        <div class="field-group length-group">
-          <div class="field-label-row">
-            <label for="lengthRange">Password length</label>
-            <div class="number-box">
-              <input id="lengthNumber" type="number" min="4" max="128" value="20" inputmode="numeric" aria-label="Password length number">
-              <span>chars</span>
+        <div id="passphraseControls" hidden>
+          <div class="preset-row" aria-label="Passphrase presets">
+            <button class="phrase-preset active" type="button" data-phrase-preset="standard">Standard</button>
+            <button class="phrase-preset" type="button" data-phrase-preset="strong">Strong</button>
+            <button class="phrase-preset" type="button" data-phrase-preset="compact">Compact</button>
+          </div>
+          <div class="two-col">
+            <label class="stacked-label" for="wordCount">Number of words
+              <select id="wordCount"><option>3</option><option selected>4</option><option>5</option><option>6</option><option>7</option><option>8</option></select>
+            </label>
+            <label class="stacked-label" for="separator">Separator
+              <select id="separator"><option value="-" selected>Hyphen (-)</option><option value="_">Underscore (_)</option><option value=".">Dot (.)</option><option value=" ">Space</option></select>
+            </label>
+          </div>
+          <div class="advanced phrase-options">
+            <div class="advanced-body">
+              <label class="toggle-row"><span><strong>Capitalize words</strong><small>Capitalizes the first letter of each word.</small></span><input id="capitalizeWords" type="checkbox" checked></label>
+              <label class="toggle-row"><span><strong>Add a number</strong><small>Appends a cryptographically random 2-digit number.</small></span><input id="appendNumber" type="checkbox" checked></label>
+              <label class="toggle-row"><span><strong>Add a symbol</strong><small>Appends one random symbol.</small></span><input id="appendSymbol" type="checkbox"></label>
             </div>
           </div>
-          <input id="lengthRange" type="range" min="4" max="128" value="20" aria-label="Password length slider">
-          <div class="range-scale"><span>4</span><span>64</span><span>128</span></div>
         </div>
 
-        <fieldset class="field-group">
-          <legend>Character sets</legend>
-          <div class="option-grid">
-            <label class="check-card"><input id="lowercase" type="checkbox" checked><span><strong>Lowercase</strong><small>a-z</small></span></label>
-            <label class="check-card"><input id="uppercase" type="checkbox" checked><span><strong>Uppercase</strong><small>A-Z</small></span></label>
-            <label class="check-card"><input id="numbers" type="checkbox" checked><span><strong>Numbers</strong><small>0-9</small></span></label>
-            <label class="check-card"><input id="symbols" type="checkbox" checked><span><strong>Symbols</strong><small>! @ # $ % …</small></span></label>
-          </div>
-        </fieldset>
-
-        <details class="advanced" open>
-          <summary>Advanced options</summary>
-          <div class="advanced-body">
-            <label class="toggle-row"><span><strong>Exclude ambiguous characters</strong><small>Removes 0, O, o, 1, I, l and |.</small></span><input id="excludeAmbiguous" type="checkbox" checked></label>
-            <label class="toggle-row"><span><strong>No repeated characters</strong><small>Every character in the password must be unique.</small></span><input id="noRepeats" type="checkbox"></label>
-            <label class="toggle-row"><span><strong>Start with a letter</strong><small>Useful for systems that reject a symbol or number first.</small></span><input id="startWithLetter" type="checkbox"></label>
-
-            <label class="stacked-label" for="excludedChars">Custom characters to exclude
-              <input id="excludedChars" type="text" maxlength="100" autocomplete="off" spellcheck="false" placeholder="Example: {}[]/\\">
-            </label>
-
-            <label class="stacked-label" for="quantity">How many passwords?
-              <select id="quantity">
-                <option value="1">1 password</option>
-                <option value="3">3 passwords</option>
-                <option value="5">5 passwords</option>
-                <option value="10">10 passwords</option>
-              </select>
-            </label>
-          </div>
-        </details>
+        <label class="stacked-label quantity-label" for="quantity">How many results?
+          <select id="quantity"><option value="1">1 result</option><option value="3">3 results</option><option value="5">5 results</option><option value="10">10 results</option><option value="20">20 results</option></select>
+        </label>
 
         <div class="action-row">
-          <button id="generateButton" class="primary-button" type="button">Generate passwords</button>
+          <button id="generateButton" class="primary-button" type="button">Generate</button>
           <button id="copyAllButton" class="secondary-button" type="button" disabled>Copy all</button>
         </div>
         <p id="errorMessage" class="error-message" role="alert" aria-live="assertive"></p>
@@ -109,78 +129,50 @@
 
       <div class="panel results-panel">
         <div class="panel-heading">
-          <div>
-            <p class="eyebrow">Step 2</p>
-            <h2>Your results</h2>
-          </div>
-          <span id="resultCount" class="result-count">1 password</span>
+          <div><p class="eyebrow">Step 2</p><h2>Your results</h2></div>
+          <span id="resultCount" class="result-count">1 result</span>
         </div>
 
         <div class="strength-card">
           <div class="strength-topline">
-            <div>
-              <span class="muted">Estimated strength</span>
-              <strong id="strengthLabel">Excellent</strong>
-            </div>
-            <div class="entropy-block">
-              <strong id="entropyValue">119</strong>
-              <span>bits*</span>
-            </div>
+            <div><span class="muted">Estimated strength</span><strong id="strengthLabel">Excellent</strong></div>
+            <div class="entropy-block"><strong id="entropyValue">119</strong><span>bits*</span></div>
           </div>
           <div class="meter" aria-hidden="true"><span id="strengthMeter"></span></div>
-          <p id="strengthDetail" class="strength-detail">A long password using several character groups is difficult to guess by brute force.</p>
-          <p class="fine-print">*Entropy is an approximation based on length and available character pool.</p>
+          <p id="strengthDetail" class="strength-detail">A long random password with a large search space.</p>
+          <p class="fine-print">*Approximation for comparison; real-world security also depends on how the secret is stored and used.</p>
         </div>
 
         <div id="results" class="results-list" aria-live="polite"></div>
 
         <div class="shortcut-card">
-          <strong>Keyboard shortcuts</strong>
+          <strong>Shortcuts</strong>
           <span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Enter</kbd> generate</span>
           <span><kbd>Ctrl</kbd>/<kbd>⌘</kbd> + <kbd>Shift</kbd> + <kbd>C</kbd> copy first</span>
         </div>
       </div>
     </section>
 
-    <section class="info-grid" aria-label="Password security information">
-      <article class="info-card">
-        <span class="info-icon">01</span>
-        <h3>Generated locally</h3>
-        <p>The generator runs entirely in your browser. Passwords are never sent to a server by this page.</p>
-      </article>
-      <article class="info-card">
-        <span class="info-icon">02</span>
-        <h3>Cryptographic randomness</h3>
-        <p>The app uses <code>crypto.getRandomValues()</code> instead of <code>Math.random()</code> for password selection and shuffling.</p>
-      </article>
-      <article class="info-card">
-        <span class="info-icon">03</span>
-        <h3>No password history</h3>
-        <p>Generated passwords are kept only in the current page. Theme preference may be remembered, but passwords are not stored.</p>
-      </article>
-      <article class="info-card">
-        <span class="info-icon">04</span>
-        <h3>Use unique passwords</h3>
-        <p>Use a different password for every account, store them in a reputable password manager, and enable MFA where available.</p>
-      </article>
+    <section class="info-grid">
+      <article class="info-card"><span class="info-icon">01</span><h3>Generated locally</h3><p>Secrets stay in the current browser page and are not sent to a server.</p></article>
+      <article class="info-card"><span class="info-icon">02</span><h3>Cryptographic randomness</h3><p>Random selection uses <code>crypto.getRandomValues()</code> with rejection sampling.</p></article>
+      <article class="info-card"><span class="info-icon">03</span><h3>Password + passphrase</h3><p>v2 adds memorable passphrases with configurable words, separators, capitalization, numbers, and symbols.</p></article>
+      <article class="info-card"><span class="info-icon">04</span><h3>No secret history</h3><p>Generated values are not stored in localStorage. Only your visual theme may be remembered.</p></article>
     </section>
 
     <section class="details-section">
-      <div>
-        <p class="eyebrow">Security notes</p>
-        <h2>What makes a strong password?</h2>
-      </div>
+      <div><p class="eyebrow">Version 2</p><h2>What changed?</h2></div>
       <div class="details-copy">
-        <p><strong>Length matters most.</strong> For ordinary account passwords, 16-24 random characters is a strong practical range. Longer is better when the service allows it.</p>
-        <p><strong>Randomness matters.</strong> Names, birthdays, keyboard patterns, quotes, and predictable substitutions are easier to guess than genuinely random strings.</p>
-        <p><strong>Uniqueness matters.</strong> Reusing one strong password across several sites still creates risk if any one of those sites is breached.</p>
+        <p><strong>Two generation modes.</strong> Choose a fully random password or a more memorable passphrase.</p>
+        <p><strong>Better batching.</strong> Generate up to 20 results at once, with individual and Copy All controls.</p>
+        <p><strong>More transparent security.</strong> The app shows estimated entropy, documents its randomness method, and keeps all generation local.</p>
       </div>
     </section>
   </main>
 
   <footer>
-    <p><strong>Neo Password Generator</strong> — a Rice2k project.</p>
-    <p>Client-side utility. Review your organization's password rules before use.</p>
+    <p><strong>Neo Password Generator v2.0</strong> — a Rice2k project.</p>
+    <p>Client-side utility. Use unique secrets and MFA where available.</p>
   </footer>
 
   <div id="toast" class="toast" role="status" aria-live="polite"></div>

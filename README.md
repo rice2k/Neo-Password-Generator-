@@ -1,58 +1,42 @@
-# Neo Password Generator
+# Neo Password Generator v2
 
-A modern, privacy-focused password generator by **Rice2k**.
+A modern, privacy-focused password and passphrase generator by **Rice2k**.
 
-Neo Password Generator runs entirely in the browser and uses the Web Crypto API for cryptographically secure random password generation. No account, server, database, API key, or external service is required.
+Neo Password Generator runs entirely in the browser and uses the Web Crypto API for cryptographically secure random generation. No account, database, API key, backend, or analytics service is required.
+
+![Neo Password Generator v2 screenshot](assets/neo-password-generator-v2.jpg)
 
 ## Live Version
 
-GitHub Pages deployment is included in this repository through `.github/workflows/pages.yml`.
+**Live preview:** https://raw.githack.com/rice2k/Neo-Password-Generator-/main/index.html
 
-When Pages is active, the project URL is expected to be:
+**GitHub Pages URL:** https://rice2k.github.io/Neo-Password-Generator-/
 
-`https://rice2k.github.io/Neo-Password-Generator-/`
+The repository includes a GitHub Pages deployment workflow. If Pages is not enabled for the repository yet, GitHub requires it to be enabled in repository Settings before the Pages URL can publish.
 
-## Features
+## v2 Highlights
 
-- Secure random generation with `crypto.getRandomValues()`
+- Random password mode and new passphrase mode
+- Cryptographic randomness with `crypto.getRandomValues()`
 - Password lengths from 4 to 128 characters
+- Password presets: Balanced, Strong, Maximum, Easy to type, PIN
+- Passphrase presets: Standard, Strong, Compact
+- 3–8 word passphrases
+- Configurable passphrase separators
+- Optional capitalization, number suffix, and symbol suffix
 - Lowercase, uppercase, number, and symbol controls
-- Presets:
-  - Balanced
-  - Strong
-  - Maximum
-  - Easy to type
-  - PIN
-- Exclude ambiguous characters such as `0`, `O`, `1`, `I`, and `l`
-- Custom excluded-character list
-- Optional no-repeat mode
-- Optional start-with-a-letter mode
-- Generate 1, 3, 5, or 10 passwords at once
-- Guarantees at least one character from every enabled character set
-- Estimated entropy in bits
-- Human-readable strength rating
-- Copy one password or copy all generated passwords
+- Ambiguous-character exclusion
+- Custom excluded characters
+- No-repeat password mode
+- Start-with-a-letter mode
+- Generate 1, 3, 5, 10, or 20 results
+- Estimated entropy and strength rating
+- Copy one result or Copy All
 - Keyboard shortcuts
+- Dark/light themes
 - Responsive desktop/mobile interface
-- Dark and light themes
-- Theme preference stored locally
-- No generated-password history
-- No analytics or password transmission
+- No generated-secret history
 - No third-party runtime dependencies
-
-## Privacy
-
-Generated passwords never leave the browser through this application.
-
-The app does **not**:
-
-- upload generated passwords;
-- save generated passwords to local storage;
-- send passwords to a backend;
-- call a password-generation API;
-- use analytics to record generated values.
-
-Only the selected visual theme may be stored locally in the browser.
 
 ## Security Design
 
@@ -60,62 +44,44 @@ Only the selected visual theme may be stored locally in the browser.
 
 The generator uses `window.crypto.getRandomValues()` rather than `Math.random()`.
 
-A rejection-sampling method is used when converting random 32-bit values into character indexes. This avoids modulo bias when selecting from a character pool.
+Random integer conversion uses rejection sampling to avoid modulo bias. Password characters, password shuffling, passphrase words, number suffixes, and symbol suffixes all use this cryptographic random source.
 
-### Selected character groups
+### Local generation
 
-When lowercase, uppercase, numbers, or symbols are enabled, the generator first selects at least one character from every enabled group. It then fills the remaining positions from the combined pool and performs a cryptographically driven shuffle.
+Generated passwords and passphrases remain in the browser page. They are not uploaded or saved by the app. Only the selected visual theme may be stored locally.
 
-### No-repeat mode
+### Password guarantees
 
-When enabled, each character may appear only once. The app checks the available character pool before generating and reports an error if the requested length is impossible.
-
-### Entropy estimate
-
-The displayed entropy value is an estimate based on the configured password length and available character pool. It is intended as a useful comparison aid, not a guarantee of resistance against every attack model.
+For random passwords, the app inserts at least one character from every enabled character group before filling and cryptographically shuffling the result.
 
 ## Keyboard Shortcuts
 
 | Shortcut | Action |
 | --- | --- |
-| `Ctrl/Command + Enter` | Generate passwords |
-| `Ctrl/Command + Shift + C` | Copy the first generated password |
+| `Ctrl/Command + Enter` | Generate |
+| `Ctrl/Command + Shift + C` | Copy the first result |
 
 ## Files
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Main application and security information |
-| `style.css` | Responsive Neo interface and themes |
-| `app.js` | Secure password generation and application logic |
+| `index.html` | Main v2 application |
+| `style.css` | Neo interface and responsive design |
+| `app.js` | Password/passphrase generation logic |
+| `assets/neo-password-generator-v2.jpg` | Repository screenshot |
 | `.github/workflows/pages.yml` | GitHub Pages deployment |
-| `.nojekyll` | Keeps the static Pages site untouched by Jekyll |
+| `.nojekyll` | Static Pages support |
 | `CHANGELOG.md` | Version history |
+| `SECURITY.md` | Security notes |
 
-## Running Locally
+## Run Locally
 
-No build process is required.
+No build process is required. Download the repository and open `index.html` in a modern browser. Password and passphrase generation works locally without a server.
 
-1. Download or clone the repository.
-2. Open `index.html` in a modern browser.
-3. Generate passwords entirely offline.
+## Recommended Practices
 
-For the most consistent clipboard behavior, serving the directory through a local web server is recommended, but password generation itself works without one.
-
-## Recommended Password Practices
-
-- Prefer long, randomly generated passwords.
-- Use a unique password for every service.
-- Store passwords in a reputable password manager.
-- Enable multi-factor authentication when available.
-- Follow the password rules required by the specific service or organization.
-
-## Project History
-
-This project is a rebuilt and expanded successor to an older offline HTML password-generator file in the Rice2k archive. The current Neo version was rewritten as a clean standalone application with stronger generation logic, improved options, security information, accessibility, responsive design, and GitHub Pages deployment.
+Use unique passwords for every service, prefer long random secrets, store them in a reputable password manager, and enable MFA when available.
 
 ## Author
 
 **Rice2k / Christopher Schumacher**
-
-GitHub: `https://github.com/rice2k`
