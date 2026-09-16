@@ -4,7 +4,7 @@ A modern, privacy-focused password and passphrase generator by **Rice2k**.
 
 Neo Password Generator runs entirely in the browser and uses the Web Crypto API for cryptographically secure random generation. No account, database, API key, backend, or analytics service is required.
 
-![Neo Password Generator v2 screenshot](assets/neo-password-generator-v2.jpg)
+![Neo Password Generator v2 screenshot](assets/neo-password-generator-v2.webp)
 
 ## Live Version
 
@@ -68,7 +68,7 @@ For random passwords, the app inserts at least one character from every enabled 
 | `index.html` | Main v2 application |
 | `style.css` | Neo interface and responsive design |
 | `app.js` | Password/passphrase generation logic |
-| `assets/neo-password-generator-v2.jpg` | Repository screenshot |
+| `assets/neo-password-generator-v2.webp` | Repository screenshot |
 | `.github/workflows/pages.yml` | GitHub Pages deployment |
 | `.nojekyll` | Static Pages support |
 | `CHANGELOG.md` | Version history |
