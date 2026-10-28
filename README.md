@@ -85,3 +85,9 @@ Use unique passwords for every service, prefer long random secrets, store them i
 ## Author
 
 **Rice2k / Christopher Schumacher**
+
+## Related Rice2K projects
+
+Use the generator's documented local Web Crypto features; avoid sending generated secrets to unrelated sites.
+
+[Cyber Tool Atlas](https://github.com/rice2k/Cyber-Tool-Atlas) · [Explore Rice2K security projects](https://rice2k.github.io/rice2k-startdeck/projects/?category=Security)
